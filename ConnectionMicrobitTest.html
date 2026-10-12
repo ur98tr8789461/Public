@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>micro:bit Glassmorphic Bluetooth Monitor</title>
+    <title>micro:bit Monochrome Glass Terminal</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font: Inter -->
+    <!-- Google Fonts: Inter & JetBrains Mono -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -16,18 +16,18 @@
             theme: {
                 extend: {
                     colors: {
-                        glass: {
-                            base: 'rgba(15, 23, 42, 0.65)',
-                            card: 'rgba(30, 41, 59, 0.55)',
-                            border: 'rgba(255, 255, 255, 0.08)',
-                            highlight: 'rgba(255, 255, 255, 0.15)',
-                        },
-                        neon: {
-                            cyan: '#00f0ff',
-                            magenta: '#ff007f',
-                            purple: '#a855f7',
-                            emerald: '#10b981',
-                            amber: '#f59e0b'
+                        mono: {
+                            50: '#fafafa',
+                            100: '#f4f4f5',
+                            200: '#e4e4e7',
+                            300: '#d4d4d8',
+                            400: '#a1a1aa',
+                            500: '#71717a',
+                            600: '#52525b',
+                            700: '#3f3f46',
+                            800: '#27272a',
+                            900: '#18181b',
+                            950: '#09090b',
                         }
                     },
                     fontFamily: {
@@ -40,126 +40,131 @@
     </script>
     <style>
         body {
-            background: #070913;
+            background: #030305;
             background-image: 
-                radial-gradient(at 10% 15%, rgba(0, 240, 255, 0.12) 0px, transparent 50%),
-                radial-gradient(at 90% 20%, rgba(255, 0, 127, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 80%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+                radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.05) 0px, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.03) 0px, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0px, transparent 60%);
             background-attachment: fixed;
         }
 
+        /* Glassmorphism Panels */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background: rgba(18, 18, 22, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
         }
 
-        .glass-panel-interactive {
-            background: rgba(30, 41, 59, 0.55);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-panel-interactive:hover {
-            border-color: rgba(0, 240, 255, 0.3);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.08);
         }
 
+        /* LED 5x5 Matrix Grid */
         .led-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            background: rgba(10, 14, 26, 0.8);
-            padding: 16px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+            gap: 10px;
+            background: rgba(8, 8, 12, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.9);
         }
 
         .led-cell {
             aspect-ratio: 1;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
         }
 
         .led-cell.active {
-            background-color: #ff007f;
-            box-shadow: 0 0 12px #ff007f, 0 0 24px #ff007f;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px #ffffff, 0 0 30px rgba(255, 255, 255, 0.8);
             transform: scale(1.08);
         }
 
-        .led-cell.active-cyan {
-            background-color: #00f0ff;
-            box-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff;
-            transform: scale(1.08);
+        /* Radar & Connection Animations */
+        @keyframes radar-pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.8; }
         }
 
-        /* Custom sleek scrollbar */
+        .radar-ring {
+            animation: radar-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes white-glow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
+        }
+
+        .glow-active {
+            animation: white-glow 1.5s infinite alternate ease-in-out;
+        }
+
+        /* Sleek Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 8px;
+            background: rgba(10, 10, 15, 0.5);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 240, 255, 0.4);
-        }
-
-        .pulse-glow {
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
-            100% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
+            background: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-neon-cyan selection:text-slate-950">
+<body class="text-mono-100 min-h-screen font-sans flex flex-col antialiased selection:bg-white selection:text-black">
 
-    <header class="sticky top-0 z-40 glass-panel border-b border-glass-border">
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
             <!-- Logo & Title -->
-            <div class="flex items-center space-x-3.5">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-neon-cyan/20 via-neon-purple/20 to-neon-magenta/20 border border-neon-cyan/30 flex items-center justify-center shadow-lg relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-neon-cyan/10 blur-md group-hover:bg-neon-cyan/30 transition-all"></div>
-                    <i class="fa-brands fa-bluetooth-b text-neon-cyan text-xl relative z-10"></i>
+            <div class="flex items-center space-x-4">
+                <div class="w-11 h-11 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center shadow-lg relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-white/10 blur-sm group-hover:bg-white/20 transition-all"></div>
+                    <i class="fa-brands fa-bluetooth-b text-white text-xl relative z-10"></i>
                 </div>
                 <div>
-                    <div class="flex items-center space-x-2">
-                        <h1 class="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan via-slate-100 to-neon-magenta tracking-tight">
+                    <div class="flex items-center space-x-2.5">
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">
                             micro:bit Bluetooth Signal Terminal
                         </h1>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20">v2.0 Web BLE</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/20">v2.5 Web BLE</span>
                     </div>
-                    <p class="text-xs text-slate-400">Live Nordic UART & Service Monitor</p>
+                    <p class="text-xs text-mono-400">High-Contrast GATT Telemetry Monitor</p>
                 </div>
             </div>
 
-            <!-- Connection Actions -->
+            <!-- Connection Status & Button -->
             <div class="flex items-center space-x-3">
-                <!-- Status Badge -->
-                <div id="status-pill" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-900/60 border border-slate-700/60 text-slate-400">
-                    <span id="status-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                <!-- Status Indicator -->
+                <div id="status-pill" class="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-mono bg-black/60 border border-white/10 text-mono-400">
+                    <span id="status-dot" class="w-2 h-2 rounded-full bg-mono-600"></span>
                     <span id="status-text">Disconnected</span>
                 </div>
 
-                <!-- Connect / Disconnect Button -->
-                <button id="btn-connect" onclick="toggleBluetoothConnection()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-neon-cyan via-indigo-600 to-neon-magenta hover:brightness-110 active:scale-95 text-slate-950 shadow-lg shadow-neon-cyan/20 transition-all duration-200 flex items-center space-x-2.5 cursor-pointer">
+                <!-- Connect Button -->
+                <button id="btn-connect" onclick="toggleBluetoothConnection()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-black hover:bg-mono-200 active:scale-95 shadow-lg shadow-white/10 transition-all duration-200 flex items-center space-x-2.5 cursor-pointer border border-white">
                     <i class="fa-brands fa-bluetooth-b text-base"></i>
                     <span id="btn-connect-text">Connect micro:bit</span>
                 </button>
@@ -174,84 +179,86 @@
             
             <!-- Connection Banner / Live Stats Card -->
             <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
-                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-glass-border pb-4">
-                    <div class="flex items-center space-x-3">
-                        <div id="device-icon-bg" class="w-10 h-10 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-center text-slate-400 transition-all">
-                            <i id="device-icon" class="fa-solid fa-microchip text-lg"></i>
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div class="flex items-center space-x-3.5">
+                        <div id="device-icon-bg" class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-mono-400 transition-all relative">
+                            <i id="device-icon" class="fa-solid fa-microchip text-xl"></i>
+                            <div id="radar-pulse" class="hidden absolute inset-0 rounded-2xl border border-white/40 radar-ring pointer-events-none"></div>
                         </div>
                         <div>
-                            <p class="text-xs text-slate-400 font-mono">ACTIVE DEVICE</p>
-                            <h2 id="device-name" class="text-base font-bold text-slate-100">No micro:bit Connected</h2>
+                            <p class="text-[10px] text-mono-400 font-mono tracking-widest uppercase">Target Device</p>
+                            <h2 id="device-name" class="text-base font-bold text-white">No micro:bit Connected</h2>
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-4 text-xs font-mono">
+                    <div class="flex items-center space-x-5 text-xs font-mono">
                         <div>
-                            <span class="text-slate-500 block text-[10px]">PACKETS</span>
-                            <span id="packet-count" class="text-neon-cyan font-bold text-sm">0</span>
+                            <span class="text-mono-500 block text-[10px]">PACKETS</span>
+                            <span id="packet-count" class="text-white font-bold text-sm">0</span>
                         </div>
-                        <div class="h-6 w-[1px] bg-slate-800"></div>
+                        <div class="h-6 w-[1px] bg-white/10"></div>
                         <div>
-                            <span class="text-slate-500 block text-[10px]">LAST SIGNAL</span>
-                            <span id="last-signal-time" class="text-slate-300 font-bold text-sm">--:--:--</span>
+                            <span class="text-mono-500 block text-[10px]">LAST SIGNAL</span>
+                            <span id="last-signal-time" class="text-mono-300 font-bold text-sm">--:--:--</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Signal Indicators -->
+                <!-- Signal Badges -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                    <div class="bg-slate-900/40 border border-glass-border rounded-xl p-3 text-center">
-                        <span class="text-[10px] text-slate-400 font-mono block mb-1">BUTTON A</span>
-                        <span id="badge-btn-a" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50">RELEASED</span>
+                    <div class="bg-black/40 border border-white/10 rounded-xl p-3 text-center">
+                        <span class="text-[10px] text-mono-400 font-mono block mb-1">BUTTON A</span>
+                        <span id="badge-btn-a" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10">IDLE</span>
                     </div>
-                    <div class="bg-slate-900/40 border border-glass-border rounded-xl p-3 text-center">
-                        <span class="text-[10px] text-slate-400 font-mono block mb-1">BUTTON B</span>
-                        <span id="badge-btn-b" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50">RELEASED</span>
+                    <div class="bg-black/40 border border-white/10 rounded-xl p-3 text-center">
+                        <span class="text-[10px] text-mono-400 font-mono block mb-1">BUTTON B</span>
+                        <span id="badge-btn-b" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10">IDLE</span>
                     </div>
-                    <div class="bg-slate-900/40 border border-glass-border rounded-xl p-3 text-center">
-                        <span class="text-[10px] text-slate-400 font-mono block mb-1">GESTURE</span>
-                        <span id="badge-gesture" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50">NONE</span>
+                    <div class="bg-black/40 border border-white/10 rounded-xl p-3 text-center">
+                        <span class="text-[10px] text-mono-400 font-mono block mb-1">GESTURE</span>
+                        <span id="badge-gesture" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10">NONE</span>
                     </div>
-                    <div class="bg-slate-900/40 border border-glass-border rounded-xl p-3 text-center">
-                        <span class="text-[10px] text-slate-400 font-mono block mb-1">UART SERVICE</span>
-                        <span id="badge-uart" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50">OFFLINE</span>
+                    <div class="bg-black/40 border border-white/10 rounded-xl p-3 text-center">
+                        <span class="text-[10px] text-mono-400 font-mono block mb-1">UART SERVICE</span>
+                        <span id="badge-uart" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10">OFFLINE</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Live Terminal Screen -->
             <div class="glass-panel rounded-2xl p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-glass-border pb-3">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <div class="flex items-center space-x-2.5">
-                        <i class="fa-solid fa-terminal text-neon-cyan"></i>
-                        <h3 class="font-bold text-slate-200 text-sm">Live Terminal Signal Feed</h3>
+                        <i class="fa-solid fa-terminal text-white"></i>
+                        <h3 class="font-bold text-white text-sm">Live Terminal Signal Feed</h3>
                     </div>
 
-                    <!-- Log Actions -->
+                    <!-- Actions -->
                     <div class="flex items-center space-x-2 text-xs">
-                        <button id="btn-autoscroll" onclick="toggleAutoscroll()" class="px-2.5 py-1 rounded-lg bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20 hover:bg-neon-cyan/20 transition flex items-center space-x-1">
+                        <button id="btn-autoscroll" onclick="toggleAutoscroll()" class="px-2.5 py-1 rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition flex items-center space-x-1">
                             <i class="fa-solid fa-angles-down text-[10px]"></i>
                             <span>Autoscroll: ON</span>
                         </button>
-                        <button onclick="copyLogs()" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition flex items-center space-x-1">
+                        <button onclick="copyLogs()" class="px-2.5 py-1 rounded-lg bg-black/60 text-mono-300 hover:bg-white/10 border border-white/10 transition flex items-center space-x-1">
                             <i class="fa-regular fa-copy text-[10px]"></i>
                             <span>Copy</span>
                         </button>
-                        <button onclick="clearConsoleLog()" class="px-2.5 py-1 rounded-lg bg-slate-800 text-rose-400 hover:bg-slate-700 border border-slate-700 transition flex items-center space-x-1">
+                        <button onclick="clearConsoleLog()" class="px-2.5 py-1 rounded-lg bg-black/60 text-mono-400 hover:text-white border border-white/10 transition flex items-center space-x-1">
                             <i class="fa-solid fa-trash text-[10px]"></i>
                             <span>Clear</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Terminal Log Screen -->
-                <div id="terminal-log" class="bg-slate-950/90 border border-slate-800/80 rounded-xl p-4 h-80 overflow-y-auto font-mono text-xs space-y-2 relative shadow-inner">
-                    <div class="text-slate-500 italic">[System] Terminal initialized. Awaiting micro:bit Bluetooth pairing...</div>
+                <!-- Log Output Box -->
+                <div id="terminal-log" class="bg-mono-950/90 border border-white/10 rounded-xl p-4 h-80 overflow-y-auto font-mono text-xs space-y-2 relative shadow-inner">
+                    <div class="text-mono-500 italic">[System] Terminal initialized. Awaiting Web Bluetooth connection...</div>
                 </div>
 
-                <!-- Manual Test Signal Sender (For Testing UI without micro:bit) -->
-                <div class="pt-2 border-t border-glass-border flex items-center space-x-2">
-                    <input type="text" id="sim-input" placeholder="Simulate incoming signal string (e.g. 'A_PRESSED', 'SHAKE', 'HELLO')..." onkeydown="if(event.key === 'Enter') sendSimulatedSignal()" class="flex-1 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-neon-cyan">
-                    <button onclick="sendSimulatedSignal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-neon-cyan border border-slate-700 rounded-xl text-xs font-bold transition">
+                <!-- Simulation Input Bar -->
+                <div class="pt-2 border-t border-white/10 flex items-center space-x-2">
+                    <input type="text" id="sim-input" placeholder="Simulate incoming UART data (e.g. 'A_PRESSED', 'SHAKE', 'WALKING')..." onkeydown="if(event.key === 'Enter') sendSimulatedSignal()" class="flex-1 bg-black/60 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-mono-600 focus:outline-none focus:border-white">
+                    <button onclick="sendSimulatedSignal()" class="px-4 py-2 bg-white text-black hover:bg-mono-200 border border-white rounded-xl text-xs font-bold transition">
                         Simulate
                     </button>
                 </div>
@@ -262,75 +269,79 @@
         <!-- RIGHT COLUMN: Virtual Matrix & MakeCode Guide (5 Cols) -->
         <div class="lg:col-span-5 space-y-6">
 
+            <!-- 5x5 Matrix Card -->
             <div class="glass-panel rounded-2xl p-6 space-y-5">
-                <div class="flex items-center justify-between border-b border-glass-border pb-3">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-display text-neon-magenta"></i>
-                        <h3 class="font-bold text-slate-200 text-sm">Virtual 5x5 LED Matrix</h3>
+                        <i class="fa-solid fa-border-all text-white"></i>
+                        <h3 class="font-bold text-white text-sm">Virtual 5x5 LED Matrix</h3>
                     </div>
-                    <span id="matrix-mode-tag" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Idle Mirror</span>
+                    <span id="matrix-mode-tag" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/60 text-mono-400 border border-white/10">Idle Mirror</span>
                 </div>
 
-                <!-- Matrix Display Widget -->
+                <!-- LED Grid Container -->
                 <div class="flex flex-col items-center justify-center space-y-4 py-2">
                     <div class="led-grid w-56 h-56" id="led-matrix">
-                        <!-- 25 LED Cells initialized via JavaScript -->
+                        <!-- 25 Cells injected by JS -->
                     </div>
-                    <p class="text-[11px] text-slate-400 text-center">Mirrors incoming signals or light patterns sent over UART.</p>
+                    <p class="text-[11px] text-mono-400 text-center">Mirrors incoming micro:bit gestures and LED patterns.</p>
                 </div>
 
-                <!-- Pre-set Pattern Triggers for Simulation -->
-                <div class="grid grid-cols-3 gap-2 text-xs font-medium">
-                    <button onclick="renderMatrixPattern('CHECK')" class="py-2 px-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl text-emerald-400 transition text-center">
+                <!-- Pre-set Pattern Triggers -->
+                <div class="grid grid-cols-3 gap-2 text-xs font-mono">
+                    <button onclick="renderMatrixPattern('CHECK')" class="py-2 px-3 bg-black/40 hover:bg-white/10 border border-white/10 rounded-xl text-mono-200 transition text-center">
                         Checkmark
                     </button>
-                    <button onclick="renderMatrixPattern('CROSS')" class="py-2 px-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl text-rose-400 transition text-center">
+                    <button onclick="renderMatrixPattern('CROSS')" class="py-2 px-3 bg-black/40 hover:bg-white/10 border border-white/10 rounded-xl text-mono-200 transition text-center">
                         Cross
                     </button>
-                    <button onclick="renderMatrixPattern('HEART')" class="py-2 px-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl text-neon-magenta transition text-center">
+                    <button onclick="renderMatrixPattern('HEART')" class="py-2 px-3 bg-black/40 hover:bg-white/10 border border-white/10 rounded-xl text-mono-200 transition text-center">
                         Heart
                     </button>
                 </div>
             </div>
 
+            <!-- MakeCode Instructions Card -->
             <div class="glass-panel rounded-2xl p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-glass-border pb-3">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-code text-neon-purple"></i>
-                        <h3 class="font-bold text-slate-200 text-sm">MakeCode Setup Snippet</h3>
+                        <i class="fa-solid fa-code text-white"></i>
+                        <h3 class="font-bold text-white text-sm">MakeCode Setup Snippet</h3>
                     </div>
-                    <button onclick="copyCodeSnippet()" class="text-[11px] text-neon-cyan hover:underline flex items-center space-x-1">
+                    <button onclick="copyCodeSnippet()" class="text-[11px] text-mono-300 hover:text-white flex items-center space-x-1 font-mono">
                         <i class="fa-regular fa-copy"></i>
                         <span>Copy Code</span>
                     </button>
                 </div>
 
-                <p class="text-xs text-slate-300">
-                    Flash this program onto your micro:bit using Microsoft MakeCode (<a href="https://makecode.microbit.org" target="_blank" class="text-neon-cyan underline">makecode.microbit.org</a>):
+                <p class="text-xs text-mono-300">
+                    Flash this minimal UART program to your micro:bit in <a href="https://makecode.microbit.org" target="_blank" class="text-white underline">makecode.microbit.org</a>:
                 </p>
 
-                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800/80 font-mono text-[11px] text-slate-300 relative group overflow-x-auto">
+                <div class="bg-mono-950/90 p-3.5 rounded-xl border border-white/10 font-mono text-[11px] text-mono-300 relative group overflow-x-auto">
                     <pre id="code-snippet">bluetooth.startUartService()
+bluetooth.setTransmitPower(7)
+
+bluetooth.onBluetoothConnected(function () {
+    basic.showIcon(IconNames.Yes)
+})
 
 input.onButtonPressed(Button.A, function () {
     bluetooth.uartWriteString("A_PRESSED\n")
-    basic.showIcon(IconNames.Yes)
 })
 
 input.onButtonPressed(Button.B, function () {
     bluetooth.uartWriteString("B_PRESSED\n")
-    basic.showIcon(IconNames.No)
 })
 
 input.onGesture(Gesture.Shake, function () {
     bluetooth.uartWriteString("SHAKE\n")
-    basic.showIcon(IconNames.Surprised)
 })</pre>
                 </div>
 
-                <div class="bg-neon-cyan/5 border border-neon-cyan/20 rounded-xl p-3 text-[11px] text-slate-300 flex items-start space-x-2.5">
-                    <i class="fa-solid fa-circle-info text-neon-cyan text-sm mt-0.5"></i>
-                    <p>In MakeCode Project Settings, ensure <strong>"No Password Pairing: Anyone can connect via Bluetooth"</strong> is selected if you want instant Web Bluetooth pairing without PIN prompts.</p>
+                <div class="bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] text-mono-300 flex items-start space-x-2.5">
+                    <i class="fa-solid fa-triangle-exclamation text-white text-sm mt-0.5"></i>
+                    <p>In MakeCode <strong>Project Settings ⚙️</strong>, select <strong>"No Password Pairing: Anyone can connect via Bluetooth"</strong> to bypass Web Bluetooth security blocks.</p>
                 </div>
             </div>
 
@@ -340,26 +351,34 @@ input.onGesture(Gesture.Shake, function () {
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    <footer class="glass-panel border-t border-glass-border py-4 text-center text-xs text-slate-500">
-        <p>BBC micro:bit Web Bluetooth Live Monitor &bull; Built with HTML5 & Tailwind CSS</p>
+    <footer class="glass-panel border-t border-white/10 py-4 text-center text-xs text-mono-500 font-mono">
+        <p>BBC micro:bit Web Bluetooth Live Monitor &bull; Black & White Glassmorphic UI</p>
     </footer>
 
     <script>
-        // Bluetooth UUID Definitions
+        // Standard Nordic UART Service & Characteristics
         const NORDIC_UART_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
         const NORDIC_UART_RX_CHARACTERISTIC = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
-        // Application State
+        // State Variables
         let isConnected = false;
         let bluetoothDevice = null;
+        let gattServer = null;
         let uartRxCharacteristic = null;
         let packetCount = 0;
         let isAutoscrollEnabled = true;
 
-        // Initialize App on DOM Ready
+        // Initialize DOM Elements
         window.addEventListener('DOMContentLoaded', () => {
             initMatrix();
+            checkEnvironment();
         });
+
+        function checkEnvironment() {
+            if (window.location.protocol === 'file:') {
+                logToTerminal('WARN', 'Web Bluetooth requires an HTTP/HTTPS server or local server (e.g. http://localhost:8000). Running via file:// may block GATT requests.');
+            }
+        }
 
         // Initialize 5x5 LED Grid
         function initMatrix() {
@@ -373,7 +392,6 @@ input.onGesture(Gesture.Shake, function () {
             }
         }
 
-        // --- WEB BLUETOOTH INTEGRATION ---
         async function toggleBluetoothConnection() {
             if (isConnected) {
                 disconnectBluetooth();
@@ -384,27 +402,54 @@ input.onGesture(Gesture.Shake, function () {
 
         async function connectBluetooth() {
             if (!navigator.bluetooth) {
-                showToast('Web Bluetooth API is not supported on this browser. Please use Chrome, Edge, or Opera.', 'error');
-                logToTerminal('ERROR', 'Web Bluetooth API unavailable in current browser.');
+                showToast('Web Bluetooth API is not supported on this browser. Use Chrome or Edge.', 'error');
+                logToTerminal('ERROR', 'Web Bluetooth API unavailable in current browser environment.');
                 return;
             }
 
             try {
                 updateConnectionUI('connecting');
-                logToTerminal('SYSTEM', 'Scanning for BBC micro:bit devices...');
+                logToTerminal('SYSTEM', 'Scanning for BBC micro:bit Bluetooth devices...');
 
+                // Request device with broad fallback optionalServices
                 bluetoothDevice = await navigator.bluetooth.requestDevice({
-                    filters: [{ namePrefix: 'BBC micro:bit' }],
-                    optionalServices: [NORDIC_UART_SERVICE_UUID]
+                    filters: [
+                        { namePrefix: 'BBC micro:bit' },
+                        { namePrefix: 'micro:bit' }
+                    ],
+                    optionalServices: [
+                        NORDIC_UART_SERVICE_UUID,
+                        '00006e40-0000-1000-8000-00805f9b34fb',
+                        'e95d0553-251d-470a-a062-fa1922dfa9a8'
+                    ]
                 });
 
-                logToTerminal('SYSTEM', `Connecting to GATT server on ${bluetoothDevice.name}...`);
+                logToTerminal('SYSTEM', `Device selected: ${bluetoothDevice.name}. Connecting to GATT Server...`);
                 bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
 
-                const server = await bluetoothDevice.gatt.connect();
-                logToTerminal('SYSTEM', 'GATT server connected. Requesting Nordic UART Service...');
+                gattServer = await bluetoothDevice.gatt.connect();
+                logToTerminal('SYSTEM', 'GATT Server connected. Querying primary services...');
 
-                const service = await server.getPrimaryService(NORDIC_UART_SERVICE_UUID);
+                // Robust Service Lookup (Prevents GATT Error: Not supported)
+                let service = null;
+                try {
+                    service = await gattServer.getPrimaryService(NORDIC_UART_SERVICE_UUID);
+                } catch (e) {
+                    logToTerminal('WARN', 'Primary UUID fetch missed. Scanning all GATT services dynamically...');
+                    const services = await gattServer.getPrimaryServices();
+                    for (const s of services) {
+                        if (s.uuid.includes('6e40') || s.uuid.includes('00006e40')) {
+                            service = s;
+                            break;
+                        }
+                    }
+                }
+
+                if (!service) {
+                    throw new Error('Nordic UART Service not found on this micro:bit. Ensure "bluetooth.startUartService()" is running.');
+                }
+
+                logToTerminal('SYSTEM', 'Nordic UART Service identified. Subscribing to RX notifications...');
                 uartRxCharacteristic = await service.getCharacteristic(NORDIC_UART_RX_CHARACTERISTIC);
 
                 await uartRxCharacteristic.startNotifications();
@@ -412,15 +457,17 @@ input.onGesture(Gesture.Shake, function () {
 
                 isConnected = true;
                 updateConnectionUI('connected');
-                logToTerminal('SUCCESS', `Successfully paired and receiving UART telemetry from ${bluetoothDevice.name}`);
+                logToTerminal('SUCCESS', `Paired & receiving stream from ${bluetoothDevice.name}`);
                 showToast(`Connected to ${bluetoothDevice.name}`, 'success');
 
             } catch (error) {
                 console.error(error);
-                logToTerminal('ERROR', `Connection failed: ${error.message || error}`);
                 updateConnectionUI('disconnected');
                 if (error.name !== 'NotFoundError') {
+                    logToTerminal('ERROR', `Connection failed: ${error.message || error}`);
                     showToast(`Bluetooth Error: ${error.message}`, 'error');
+                } else {
+                    logToTerminal('WARN', 'Device selection cancelled by user.');
                 }
             }
         }
@@ -435,56 +482,59 @@ input.onGesture(Gesture.Shake, function () {
         function onDisconnected() {
             isConnected = false;
             bluetoothDevice = null;
+            gattServer = null;
             uartRxCharacteristic = null;
             updateConnectionUI('disconnected');
-            logToTerminal('WARN', 'micro:bit Bluetooth connection ended.');
+            logToTerminal('WARN', 'micro:bit Bluetooth connection terminated.');
             showToast('micro:bit disconnected', 'info');
         }
 
-        // --- UI CONNECTION STATE UPDATES ---
         function updateConnectionUI(state) {
             const btn = document.getElementById('btn-connect');
             const btnText = document.getElementById('btn-connect-text');
-            const statusPill = document.getElementById('status-pill');
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
             const deviceName = document.getElementById('device-name');
             const deviceIconBg = document.getElementById('device-icon-bg');
+            const radarPulse = document.getElementById('radar-pulse');
             const badgeUart = document.getElementById('badge-uart');
 
             if (state === 'connected') {
                 btnText.innerText = 'Disconnect';
-                btn.className = 'px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-rose-400 border border-rose-500/30 transition-all cursor-pointer';
+                btn.className = 'px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-black text-white hover:bg-mono-900 border border-white/20 transition-all cursor-pointer';
                 
-                statusDot.className = 'w-2 h-2 rounded-full bg-neon-emerald pulse-glow';
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-white glow-active';
                 statusText.innerText = 'Connected';
-                statusText.className = 'text-neon-emerald font-semibold';
+                statusText.className = 'text-white font-semibold';
 
                 deviceName.innerText = bluetoothDevice ? bluetoothDevice.name : 'BBC micro:bit';
-                deviceIconBg.className = 'w-10 h-10 rounded-xl bg-neon-cyan/20 border border-neon-cyan/40 flex items-center justify-center text-neon-cyan shadow-lg shadow-neon-cyan/10';
-                
+                deviceIconBg.className = 'w-12 h-12 rounded-2xl bg-white/20 border border-white/40 flex items-center justify-center text-white shadow-lg shadow-white/10';
+                radarPulse.classList.add('hidden');
+
                 badgeUart.innerText = 'ONLINE';
-                badgeUart.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                badgeUart.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white text-black border border-white';
 
             } else if (state === 'connecting') {
                 btnText.innerText = 'Connecting...';
-                statusDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-mono-400 animate-ping';
                 statusText.innerText = 'Pairing...';
-                statusText.className = 'text-amber-400 font-semibold';
+                statusText.className = 'text-mono-300 font-semibold';
+                radarPulse.classList.remove('hidden');
 
             } else {
                 btnText.innerText = 'Connect micro:bit';
-                btn.className = 'px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-neon-cyan via-indigo-600 to-neon-magenta hover:brightness-110 active:scale-95 text-slate-950 shadow-lg shadow-neon-cyan/20 transition-all duration-200 flex items-center space-x-2.5 cursor-pointer';
+                btn.className = 'px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-black hover:bg-mono-200 active:scale-95 shadow-lg shadow-white/10 transition-all duration-200 flex items-center space-x-2.5 cursor-pointer border border-white';
 
-                statusDot.className = 'w-2 h-2 rounded-full bg-slate-500';
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-mono-600';
                 statusText.innerText = 'Disconnected';
-                statusText.className = 'text-slate-400';
+                statusText.className = 'text-mono-400';
 
                 deviceName.innerText = 'No micro:bit Connected';
-                deviceIconBg.className = 'w-10 h-10 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-center text-slate-400';
+                deviceIconBg.className = 'w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-mono-400';
+                radarPulse.classList.add('hidden');
 
                 badgeUart.innerText = 'OFFLINE';
-                badgeUart.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50';
+                badgeUart.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10';
             }
         }
 
@@ -507,25 +557,18 @@ input.onGesture(Gesture.Shake, function () {
 
             const upperSig = signalString.toUpperCase();
 
-            // Detect & Highlight Specific Commands
             if (upperSig.includes('A_PRESSED') || upperSig === 'A') {
-                flashBadge('badge-btn-a', 'PRESSED', 'rose');
+                flashBadge('badge-btn-a', 'PRESSED');
                 renderMatrixPattern('CHECK');
             } else if (upperSig.includes('B_PRESSED') || upperSig === 'B') {
-                flashBadge('badge-btn-b', 'PRESSED', 'indigo');
+                flashBadge('badge-btn-b', 'PRESSED');
                 renderMatrixPattern('CROSS');
-            } else if (upperSig.includes('SHAKE')) {
-                flashBadge('badge-gesture', 'SHAKE', 'amber');
+            } else if (upperSig.includes('SHAKE') || upperSig.includes('STOMP')) {
+                flashBadge('badge-gesture', upperSig.includes('STOMP') ? 'STOMP' : 'SHAKE');
                 renderMatrixPattern('HEART');
-            } else if (upperSig.includes('ON')) {
-                renderMatrixPattern('CHECK');
-            } else if (upperSig.includes('OFF')) {
-                renderMatrixPattern('CROSS');
+            } else if (upperSig.includes('WALKING') || upperSig.includes('STANDING')) {
+                flashBadge('badge-gesture', upperSig);
             }
-        }
-
-        function simulateSimulatedSignal() {
-            sendSimulatedSignal();
         }
 
         function sendSimulatedSignal() {
@@ -535,41 +578,34 @@ input.onGesture(Gesture.Shake, function () {
             input.value = '';
         }
 
-        function flashBadge(elementId, text, color) {
+        function flashBadge(elementId, text) {
             const badge = document.getElementById(elementId);
             badge.innerText = text;
-            
-            if (color === 'rose') {
-                badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse';
-            } else if (color === 'indigo') {
-                badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 animate-pulse';
-            } else if (color === 'amber') {
-                badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 animate-pulse';
-            }
+            badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white text-black border border-white animate-pulse';
 
             setTimeout(() => {
-                badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-500 border border-slate-700/50';
-                badge.innerText = 'RELEASED';
-            }, 2000);
+                badge.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-mono-500 border border-white/10';
+                if (elementId.includes('btn')) badge.innerText = 'IDLE';
+                if (elementId.includes('gesture')) badge.innerText = 'NONE';
+            }, 1800);
         }
 
-        // --- TERMINAL LOGGING HELPERS ---
         function logToTerminal(type, message) {
             const terminal = document.getElementById('terminal-log');
             const time = new Date().toLocaleTimeString();
             const row = document.createElement('div');
-            row.className = 'flex items-start space-x-2 font-mono text-[11px] py-0.5 border-b border-slate-900/60';
+            row.className = 'flex items-start space-x-2 font-mono text-[11px] py-1 border-b border-white/5';
 
-            let typeStyle = 'bg-slate-800 text-slate-300';
-            if (type === 'SUCCESS') typeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-            if (type === 'DATA') typeStyle = 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30';
-            if (type === 'ERROR') typeStyle = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
-            if (type === 'WARN') typeStyle = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+            let typeStyle = 'bg-mono-800 text-mono-300';
+            if (type === 'SUCCESS') typeStyle = 'bg-white text-black font-bold';
+            if (type === 'DATA') typeStyle = 'bg-white/20 text-white border border-white/30';
+            if (type === 'ERROR') typeStyle = 'bg-red-950 text-red-300 border border-red-500/30';
+            if (type === 'WARN') typeStyle = 'bg-mono-900 text-mono-300 border border-white/10';
 
             row.innerHTML = `
-                <span class="text-slate-600 shrink-0">[${time}]</span>
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold shrink-0 ${typeStyle}">${type}</span>
-                <span class="text-slate-200 break-all">${escapeHtml(message)}</span>
+                <span class="text-mono-600 shrink-0">[${time}]</span>
+                <span class="px-1.5 py-0.2 rounded text-[9px] font-bold shrink-0 ${typeStyle}">${type}</span>
+                <span class="text-mono-200 break-all">${escapeHtml(message)}</span>
             `;
 
             terminal.appendChild(row);
@@ -584,45 +620,42 @@ input.onGesture(Gesture.Shake, function () {
             const btn = document.getElementById('btn-autoscroll');
             if (isAutoscrollEnabled) {
                 btn.innerHTML = '<i class="fa-solid fa-angles-down text-[10px]"></i><span>Autoscroll: ON</span>';
-                btn.className = 'px-2.5 py-1 rounded-lg bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20 hover:bg-neon-cyan/20 transition flex items-center space-x-1';
+                btn.className = 'px-2.5 py-1 rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition flex items-center space-x-1';
             } else {
                 btn.innerHTML = '<i class="fa-solid fa-pause text-[10px]"></i><span>Autoscroll: OFF</span>';
-                btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center space-x-1';
+                btn.className = 'px-2.5 py-1 rounded-lg bg-black/60 text-mono-400 border border-white/10 transition flex items-center space-x-1';
             }
         }
 
         function clearConsoleLog() {
-            document.getElementById('terminal-log').innerHTML = '<div class="text-slate-500 italic">[System] Terminal cleared. Awaiting signals...</div>';
+            document.getElementById('terminal-log').innerHTML = '<div class="text-mono-500 italic">[System] Terminal cleared.</div>';
             packetCount = 0;
             document.getElementById('packet-count').innerText = '0';
         }
 
         function copyLogs() {
             const terminal = document.getElementById('terminal-log');
-            const text = terminal.innerText;
             const textarea = document.createElement('textarea');
-            textarea.value = text;
+            textarea.value = terminal.innerText;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            showToast('Terminal log copied to clipboard!', 'info');
+            showToast('Logs copied to clipboard!', 'info');
         }
 
-        // --- MATRIX PATTERN ANIMATION ---
         function renderMatrixPattern(pattern) {
             const checkPattern = [0,0,0,0,0, 0,0,0,0,1, 0,0,0,1,0, 1,0,1,0,0, 0,1,0,0,0];
             const crossPattern = [1,0,0,0,1, 0,1,0,1,0, 0,0,1,0,0, 0,1,0,1,0, 1,0,0,0,1];
             const heartPattern = [0,1,0,1,0, 1,1,1,1,1, 1,1,1,1,1, 0,1,1,1,0, 0,0,1,0,0];
 
             let activePattern = pattern === 'CHECK' ? checkPattern : (pattern === 'CROSS' ? crossPattern : heartPattern);
-            let activeClass = pattern === 'CHECK' ? 'active-cyan' : 'active';
 
             for (let i = 0; i < 25; i++) {
                 const cell = document.getElementById(`led-${i}`);
                 if (cell) {
                     cell.className = 'led-cell';
-                    if (activePattern[i] === 1) cell.classList.add(activeClass);
+                    if (activePattern[i] === 1) cell.classList.add('active');
                 }
             }
 
@@ -634,7 +667,6 @@ input.onGesture(Gesture.Shake, function () {
             }, 1200);
         }
 
-        // Code Snippet Copy
         function copyCodeSnippet() {
             const codeText = document.getElementById('code-snippet').innerText;
             const textarea = document.createElement('textarea');
@@ -646,20 +678,20 @@ input.onGesture(Gesture.Shake, function () {
             showToast('MakeCode snippet copied!', 'info');
         }
 
-        // --- TOAST NOTIFICATIONS ---
+        // Toast Notification System
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
-            let bgStyle = 'bg-slate-900/90 border-slate-700 text-slate-200';
-            let icon = 'fa-info-circle text-neon-cyan';
+            let bgStyle = 'bg-mono-900 border-white/20 text-white';
+            let icon = 'fa-info-circle text-white';
 
             if (type === 'success') {
-                bgStyle = 'bg-slate-900/90 border-emerald-500/50 text-emerald-200';
-                icon = 'fa-circle-check text-emerald-400';
+                bgStyle = 'bg-white text-black font-bold border-white';
+                icon = 'fa-circle-check text-black';
             } else if (type === 'error') {
-                bgStyle = 'bg-slate-900/90 border-rose-500/50 text-rose-200';
-                icon = 'fa-circle-xmark text-rose-400';
+                bgStyle = 'bg-mono-950 border-red-500/40 text-red-200';
+                icon = 'fa-circle-xmark text-red-400';
             }
 
             toast.className = `pointer-events-auto flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-2xl text-xs backdrop-blur-md transition-all duration-300 transform translate-y-2 opacity-0 ${bgStyle}`;
